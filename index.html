@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aura Rome Tours — Scopri Roma come Non L'Hai Mai Vista</title>
+<meta name="description" content="Tour privati esclusivi in golf cart a Roma. L'esperienza definitiva della Città Eterna.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --g: #C4975A;
+  --gl: #E8CFAA;
+  --gd: #8B6A35;
+  --ink: #06050A;
+  --ink2: #0E0D14;
+  --paper: #F5F0E8;
+  --muted: rgba(245,240,232,.45);
+  --serif: 'Cormorant', Georgia, serif;
+  --sans: 'Jost', system-ui, sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{
+  background:var(--ink);
+  color:var(--paper);
+  font-family:var(--sans);
+  font-weight:300;
+  line-height:1.7;
+  overflow-x:hidden;
+  cursor:none;
+}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+::selection{background:var(--g);color:var(--ink)}
+::-webkit-scrollbar{width:2px}
+::-webkit-scrollbar-track{background:var(--ink)}
+::-webkit-scrollbar-thumb{background:var(--gd)}
+
+/* CURSOR */
+#cur,#cur-ring{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%);top:-100px;left:-100px}
+#cur{width:8px;height:8px;background:var(--g);transition:transform .15s,width .25s,height .25s}
+#cur-ring{width:36px;height:36px;border:1px solid rgba(196,151,90,.5);transition:top .08s ease,left .08s ease,width .25s,height .25s,opacity .3s}
+
+/* CANVAS */
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5}
+
+/* GRAIN */
+body::before{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");opacity:.35;mix-blend-mode:overlay}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:28px 72px;display:flex;align-items:center;justify-content:space-between;transition:all .5s cubic-bezier(.16,1,.3,1)}
+#nav.scrolled{padding:16px 72px;background:rgba(6,5,10,.94);backdrop-filter:blur(28px);border-bottom:1px solid rgba(196,151,90,.12)}
+.logo{font-family:var(--serif);font-size:21px;font-weight:400;color:var(--gl);letter-spacing:.06em}
+.logo em{font-style:italic;color:var(--paper)}
+.nav-c{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:44px}
+.nav-c a{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:rgba(245,240,232,.5);position:relative;transition:color .25s}
+.nav-c a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--g);transform:scaleX(0);transition:transform .3s cubic-bezier(.16,1,.3,1)}
+.nav-c a:hover{color:var(--gl)}
+.nav-c a:hover::after{transform:scaleX(1)}
+.nav-btn{font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);background:var(--g);padding:11px 30px;font-family:var(--sans);font-weight:500;transition:all .25s;position:relative;overflow:hidden;display:inline-block}
+.nav-btn::before{content:'';position:absolute;inset:0;background:var(--gl);transform:translateX(-100%);transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.nav-btn:hover::before{transform:translateX(0)}
+.nav-btn span{position:relative;z-index:1}
+.ham{display:none;flex-direction:column;gap:6px;cursor:none}
+.ham span{width:22px;height:1px;background:var(--paper);display:block;transition:all .3s}
+
+/* MOBILE MENU */
+#mmenu{position:fixed;inset:0;z-index:90;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;opacity:0;pointer-events:none;transition:opacity .4s}
+#mmenu.open{opacity:1;pointer-events:all}
+#mmenu a{font-family:var(--serif);font-size:48px;font-weight:300;color:var(--paper);transition:color .25s}
+#mmenu a:hover{color:var(--g)}
+#mcl{position:absolute;top:28px;right:28px;background:none;border:none;color:var(--paper);font-size:28px;cursor:none}
+
+/* HERO */
+#hero{height:100svh;position:relative;display:flex;align-items:center;overflow:hidden}
+.hero-bg-img{position:absolute;inset:0;z-index:-1}
+.hero-bg-img img{width:100%;height:100%;object-fit:cover}
+.hero-bg-img::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(6,5,10,.7) 0%,rgba(6,5,10,.4) 60%,rgba(6,5,10,.85) 100%)}
+.hero-orb{position:absolute;top:10%;right:5%;width:min(55vw,700px);height:min(55vw,700px);border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(232,207,170,.14) 0%,rgba(196,151,90,.04) 40%,transparent 70%);border:1px solid rgba(196,151,90,.07);animation:orbP 9s ease-in-out infinite;z-index:1}
+.hero-orb::before{content:'';position:absolute;inset:18%;border-radius:50%;border:1px solid rgba(196,151,90,.05);animation:orbP 9s ease-in-out infinite .6s}
+@keyframes orbP{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.04) rotate(3deg)}}
+.hero-skyline{position:absolute;bottom:0;left:0;right:0;z-index:1}
+.hero-skyline svg{width:100%;display:block}
+.hero-c{position:relative;z-index:2;padding:0 72px;max-width:860px}
+.h-ey{display:flex;align-items:center;gap:16px;font-size:10px;letter-spacing:.5em;text-transform:uppercase;color:var(--g);margin-bottom:30px;opacity:0;animation:upIn 1s .3s cubic-bezier(.16,1,.3,1) forwards}
+.h-ey::before{content:'';flex:0 0 40px;height:1px;background:var(--g)}
+.h-h1{font-family:var(--serif);font-weight:300;font-size:clamp(62px,9vw,138px);line-height:.9;letter-spacing:-.02em;margin-bottom:32px;opacity:0;animation:upIn 1s .5s cubic-bezier(.16,1,.3,1) forwards}
+.h-h1 em{font-style:italic;background:linear-gradient(135deg,var(--gl) 0%,var(--g) 50%,var(--gd) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block}
+.h-sub{font-size:15px;color:var(--muted);max-width:440px;line-height:1.85;margin-bottom:48px;opacity:0;animation:upIn 1s .7s cubic-bezier(.16,1,.3,1) forwards}
+.h-btns{display:flex;gap:18px;align-items:center;flex-wrap:wrap;opacity:0;animation:upIn 1s .9s cubic-bezier(.16,1,.3,1) forwards}
+.btn-g{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--g) 0%,var(--gd) 100%);color:var(--ink);padding:16px 44px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;font-family:var(--sans);font-weight:500;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.btn-g::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gl) 0%,var(--g) 100%);opacity:0;transition:opacity .3s}
+.btn-g:hover::before{opacity:1}
+.btn-g:hover{transform:translateY(-3px);box-shadow:0 20px 60px rgba(196,151,90,.28)}
+.btn-g span{position:relative}
+.btn-w{display:inline-block;color:var(--paper);padding:16px 44px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;font-family:var(--sans);border:1px solid rgba(245,240,232,.2);transition:all .3s}
+.btn-w:hover{border-color:var(--g);color:var(--gl)}
+.h-scroll{position:absolute;bottom:40px;left:72px;z-index:2;display:flex;align-items:center;gap:14px;opacity:0;animation:fadeIn 1s 1.6s forwards}
+.h-scroll span{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:rgba(245,240,232,.3)}
+.sbar{width:1px;height:60px;background:linear-gradient(to bottom,transparent,var(--g),transparent);animation:sbarA 2s ease-in-out infinite}
+@keyframes sbarA{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* TICKER */
+.ticker{overflow:hidden;background:linear-gradient(90deg,var(--gd),var(--g),var(--gl),var(--g),var(--gd));background-size:200% 100%;animation:gradS 6s ease infinite;padding:16px 0;position:relative;z-index:2}
+@keyframes gradS{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.ticker-t{display:flex;animation:tickR 28s linear infinite;width:max-content}
+.ticker-t span{white-space:nowrap;padding:0 48px;font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink);font-weight:400}
+.ticker-t .dot{padding:0;color:rgba(6,5,10,.4);font-size:8px}
+@keyframes tickR{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* PHILOSOPHY */
+#phi{position:relative;z-index:2;padding:160px 72px;display:grid;grid-template-columns:1fr 1fr;gap:120px;align-items:center}
+.phi-n{font-family:var(--serif);font-size:clamp(120px,14vw,200px);font-weight:300;line-height:.8;background:linear-gradient(180deg,rgba(196,151,90,.15) 0%,transparent 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;user-select:none}
+.ltag{font-size:9.5px;letter-spacing:.5em;text-transform:uppercase;color:var(--g);margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.ltag::before{content:'';flex:0 0 28px;height:1px;background:var(--g)}
+.sh2{font-family:var(--serif);font-weight:300;font-size:clamp(42px,5vw,72px);line-height:1.05;margin-bottom:28px}
+.sh2 em{font-style:italic;color:var(--gl)}
+.phi-txt{font-size:15px;color:rgba(245,240,232,.6);line-height:1.9}
+.phi-txt+.phi-txt{margin-top:20px}
+.phi-stats{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:56px}
+.pstat{background:rgba(196,151,90,.04);border:1px solid rgba(196,151,90,.1);padding:28px 32px;transition:all .3s}
+.pstat:hover{background:rgba(196,151,90,.08);border-color:rgba(196,151,90,.25)}
+.pstat .n{font-family:var(--serif);font-size:42px;font-weight:300;color:var(--g);line-height:1;margin-bottom:6px}
+.pstat .l{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.4)}
+
+/* TOURS */
+#tours{position:relative;z-index:2;padding-bottom:160px}
+.th{padding:0 72px 80px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.tk{font-size:9.5px;letter-spacing:.5em;text-transform:uppercase;color:var(--g);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.tk::before{content:'';flex:0 0 24px;height:1px;background:var(--g)}
+.thh{font-family:var(--serif);font-size:clamp(44px,5.5vw,80px);font-weight:300;line-height:1}
+.thh em{font-style:italic;color:var(--gl)}
+/* Masonry grid */
+.tgrid{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:min(24vh,200px);gap:3px;padding:0 72px}
+.tc{position:relative;overflow:hidden;cursor:none}
+.tc:nth-child(1){grid-column:span 7;grid-row:span 3}
+.tc:nth-child(2){grid-column:span 5;grid-row:span 2}
+.tc:nth-child(3){grid-column:span 5;grid-row:span 1}
+.tc:nth-child(4){grid-column:span 4;grid-row:span 2}
+.tc:nth-child(5){grid-column:span 4;grid-row:span 2}
+.tc:nth-child(6){grid-column:span 4;grid-row:span 2}
+.tc-img{width:100%;height:100%;object-fit:cover;transform:scale(1.08);transition:transform 1.2s cubic-bezier(.16,1,.3,1),filter 1s;filter:brightness(.6) saturate(.85)}
+.tc:hover .tc-img{transform:scale(1.0);filter:brightness(.42) saturate(1.2)}
+.tc-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,5,10,.92) 0%,rgba(6,5,10,.1) 50%,transparent 100%);transition:background .5s}
+.tc:hover .tc-ov{background:linear-gradient(to top,rgba(6,5,10,.98) 0%,rgba(6,5,10,.45) 65%,rgba(6,5,10,.08) 100%)}
+.tc-body{position:absolute;bottom:0;left:0;right:0;padding:30px 32px}
+.tc-badge{display:inline-block;font-size:8.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--g);margin-bottom:10px}
+.tc-name{font-family:var(--serif);font-weight:300;font-size:clamp(20px,2.2vw,32px);line-height:1.15;margin-bottom:8px}
+.tc:nth-child(1) .tc-name{font-size:clamp(30px,3.5vw,52px)}
+.tc-meta{font-size:11px;color:rgba(245,240,232,.4);letter-spacing:.08em}
+.tc-price{position:absolute;top:22px;right:22px;font-family:var(--serif);font-size:20px;font-weight:300;color:var(--gl);background:rgba(6,5,10,.75);backdrop-filter:blur(12px);padding:8px 14px;border:1px solid rgba(196,151,90,.25);opacity:0;transform:translateY(-6px);transition:all .4s}
+.tc:hover .tc-price{opacity:1;transform:translateY(0)}
+.tc-arrow{position:absolute;bottom:28px;right:32px;width:40px;height:40px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--ink);opacity:0;transform:scale(.5);transition:all .4s cubic-bezier(.16,1,.3,1)}
+.tc:hover .tc-arrow{opacity:1;transform:scale(1)}
+
+/* EXPERIENCE */
+#exp{position:relative;z-index:2;padding:160px 72px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.exp-vis{position:relative}
+.exp-main-img{width:100%;aspect-ratio:.8;object-fit:cover}
+.exp-acc-img{position:absolute;bottom:-36px;right:-36px;width:52%;aspect-ratio:1.2;object-fit:cover;border:3px solid var(--ink)}
+.exp-frame{position:absolute;top:22px;left:22px;right:-22px;bottom:-22px;border:1px solid rgba(196,151,90,.18);pointer-events:none}
+.exp-tag{position:absolute;bottom:90px;left:-24px;background:var(--g);color:var(--ink);padding:14px 20px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;writing-mode:vertical-rl;transform:rotate(180deg)}
+.expf{margin-top:44px;display:flex;flex-direction:column;gap:2px}
+.ef{display:flex;align-items:center;gap:20px;padding:18px 22px;background:rgba(196,151,90,.03);border:1px solid rgba(196,151,90,.07);transition:all .3s}
+.ef:hover{background:rgba(196,151,90,.08);border-color:rgba(196,151,90,.2);padding-left:30px}
+.ef-ico{flex:0 0 34px;height:34px;border-radius:50%;border:1px solid rgba(196,151,90,.3);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--g)}
+.ef-t{font-size:13px;font-weight:500;letter-spacing:.03em;margin-bottom:2px}
+.ef-s{font-size:11px;color:rgba(245,240,232,.42)}
+
+/* BOOKING */
+#booking{position:relative;z-index:2;padding:120px 72px 160px}
+.bwrap{max-width:1000px;margin:0 auto}
+.btop{text-align:center;margin-bottom:72px}
+.btabs{display:flex;border:1px solid rgba(196,151,90,.15);width:fit-content;margin:48px auto 0}
+.tab{padding:14px 36px;background:transparent;border:none;font-family:var(--sans);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:rgba(245,240,232,.4);cursor:none;transition:all .3s}
+.tab.active{background:var(--g);color:var(--ink);font-weight:500}
+.tab:not(.active):hover{color:var(--gl)}
+.bpanel{display:none}
+.bpanel.active{display:block}
+.bform{background:rgba(196,151,90,.04);border:1px solid rgba(196,151,90,.12);padding:60px;margin-top:48px}
+.fg{display:flex;flex-direction:column;gap:8px}
+.fg label{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--g)}
+.fg input,.fg select,.fg textarea{background:transparent;border:none;border-bottom:1px solid rgba(196,151,90,.15);color:var(--paper);font-family:var(--sans);font-size:14px;padding:12px 0;outline:none;transition:border-color .3s;-webkit-appearance:none}
+.fg select{background:rgba(14,13,20,.9);border:1px solid rgba(196,151,90,.15);padding:12px 14px;cursor:none}
+.fg select option{background:var(--ink2)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-bottom-color:var(--g)}
+.fg textarea{min-height:80px;resize:vertical}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.fgrid .full{grid-column:1/-1}
+.ffoot{display:flex;align-items:center;justify-content:space-between;margin-top:40px;flex-wrap:wrap;gap:20px}
+.fnote{font-size:11px;color:rgba(245,240,232,.3);line-height:1.7}
+.pbadges{display:flex;gap:10px;margin-top:10px}
+.pb{font-size:10px;letter-spacing:.1em;border:1px solid rgba(196,151,90,.15);padding:5px 14px;color:rgba(245,240,232,.4)}
+.pb.s{color:#7c7ce5;border-color:rgba(124,124,229,.25)}
+.pb.p{color:#009cde;border-color:rgba(0,156,222,.25)}
+.cal-box,.wa-box{margin-top:48px;background:rgba(196,151,90,.04);border:1px solid rgba(196,151,90,.12);padding:80px 60px;text-align:center}
+.cal-box .ico,.wa-box .ico{font-size:40px;margin-bottom:20px}
+.cal-box h3,.wa-box h3{font-family:var(--serif);font-size:32px;font-weight:300;margin-bottom:14px}
+.cal-box p,.wa-box p{font-size:13px;color:rgba(245,240,232,.5);max-width:400px;margin:0 auto 32px}
+.sstate{display:none;text-align:center;padding:48px}
+.sstate .sc{font-size:52px;color:var(--g);margin-bottom:20px}
+.sstate h3{font-family:var(--serif);font-size:36px;font-weight:300;margin-bottom:12px}
+.sstate p{font-size:14px;color:rgba(245,240,232,.5)}
+
+/* REVIEWS */
+#reviews{position:relative;z-index:2;padding-bottom:160px}
+.rh{padding:0 72px 72px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.rscroll{display:flex;gap:3px;overflow-x:auto;padding:0 72px 32px;scrollbar-width:none}
+.rscroll::-webkit-scrollbar{display:none}
+.rv{flex:0 0 420px;padding:48px 44px;background:rgba(196,151,90,.03);border:1px solid rgba(196,151,90,.08);transition:all .4s;position:relative;overflow:hidden}
+.rv::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--g),transparent);transform:translateX(-100%);transition:transform .5s}
+.rv:hover{border-color:rgba(196,151,90,.25);background:rgba(196,151,90,.07)}
+.rv:hover::before{transform:translateX(0)}
+.rv-stars{font-size:12px;letter-spacing:3px;color:var(--g);margin-bottom:24px}
+.rv-txt{font-family:var(--serif);font-size:19px;font-weight:300;font-style:italic;line-height:1.65;color:rgba(245,240,232,.9);margin-bottom:28px}
+.rv-n{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--g)}
+.rv-f{font-size:11px;color:rgba(245,240,232,.35);margin-top:4px}
+.rv-q{position:absolute;top:18px;right:28px;font-family:var(--serif);font-size:120px;font-weight:300;color:rgba(196,151,90,.06);line-height:1;user-select:none}
+
+/* WHY */
+#why{position:relative;z-index:2;padding:160px 72px;display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.wc{padding:56px 44px;background:rgba(196,151,90,.03);border:1px solid rgba(196,151,90,.08);position:relative;overflow:hidden;transition:all .4s}
+.wc::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gd),var(--g));transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.wc:hover::before{transform:scaleX(1)}
+.wc:hover{background:rgba(196,151,90,.07);border-color:rgba(196,151,90,.2)}
+.wn{font-family:var(--serif);font-size:80px;font-weight:300;color:rgba(196,151,90,.07);line-height:1;margin-bottom:28px}
+.wt{font-family:var(--serif);font-size:26px;font-weight:400;margin-bottom:16px}
+.wt em{font-style:italic;color:var(--gl)}
+.wb{font-size:13px;color:rgba(245,240,232,.5);line-height:1.85}
+
+/* B2B */
+#b2b{position:relative;z-index:2;padding:160px 72px;display:grid;grid-template-columns:5fr 4fr;gap:100px;align-items:center}
+.biw{position:relative}
+.biw img{width:100%;aspect-ratio:.75;object-fit:cover;filter:saturate(.8)}
+.bib{position:absolute;bottom:32px;left:-28px;background:var(--g);color:var(--ink);padding:20px 28px}
+.bib .big{font-family:var(--serif);font-size:38px;font-weight:300;line-height:1}
+.bib .sm{font-size:9px;letter-spacing:.25em;text-transform:uppercase;margin-top:4px;opacity:.7}
+.blist{margin-top:36px;display:flex;flex-direction:column;gap:2px}
+.bi{display:flex;align-items:center;gap:16px;font-size:13px;color:rgba(245,240,232,.65);padding:14px 18px;border-left:2px solid rgba(196,151,90,.15);transition:all .3s}
+.bi:hover{border-left-color:var(--g);color:var(--paper);padding-left:26px}
+
+/* FAQ */
+#faq{position:relative;z-index:2;padding:160px 72px}
+.finner{max-width:820px;margin:0 auto}
+.fhd{text-align:center;margin-bottom:72px}
+.fitem{border-bottom:1px solid rgba(196,151,90,.1)}
+.fq{display:flex;align-items:center;justify-content:space-between;padding:28px 0;cursor:none;gap:20px}
+.fqt{font-family:var(--serif);font-size:21px;font-weight:400;color:var(--paper);transition:color .25s;flex:1}
+.fq:hover .fqt{color:var(--gl)}
+.fico{flex:0 0 32px;height:32px;border:1px solid rgba(196,151,90,.25);display:flex;align-items:center;justify-content:center;color:var(--g);font-size:18px;transition:all .35s cubic-bezier(.16,1,.3,1)}
+.fitem.open .fico{transform:rotate(45deg);background:var(--g);color:var(--ink);border-color:var(--g)}
+.fa{font-size:14px;color:rgba(245,240,232,.5);line-height:1.85;max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.16,1,.3,1),padding .3s}
+.fitem.open .fa{max-height:200px;padding-bottom:28px}
+
+/* CONTACT */
+#contact{position:relative;z-index:2;padding:160px 72px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.mframe{aspect-ratio:1;border:1px solid rgba(196,151,90,.15);overflow:hidden}
+.mframe iframe{width:100%;height:100%;border:none;filter:grayscale(1) invert(.88) contrast(.88) saturate(.8)}
+.cms{margin-top:40px;display:flex;flex-direction:column;gap:2px}
+.cm{display:flex;align-items:center;gap:20px;padding:20px 22px;border:1px solid rgba(196,151,90,.08);background:rgba(196,151,90,.02);text-decoration:none;transition:all .3s;color:var(--paper)}
+.cm:hover{border-color:var(--g);background:rgba(196,151,90,.07);padding-left:30px}
+.cmi{flex:0 0 40px;height:40px;border-radius:50%;border:1px solid rgba(196,151,90,.2);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--g);transition:all .3s}
+.cm:hover .cmi{background:var(--g);color:var(--ink);border-color:var(--g)}
+.cml{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--g);margin-bottom:3px}
+.cmv{font-size:14px}
+
+/* CTA FINAL */
+#ctaf{position:relative;z-index:2;padding:180px 72px;text-align:center;overflow:hidden}
+#ctaf::before{content:'AURA';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--serif);font-size:clamp(200px,25vw,400px);font-weight:300;color:rgba(196,151,90,.03);white-space:nowrap;pointer-events:none;user-select:none;letter-spacing:.05em}
+.cf-tag{font-size:10px;letter-spacing:.5em;text-transform:uppercase;color:var(--g);margin-bottom:24px;display:flex;align-items:center;justify-content:center;gap:16px}
+.cf-tag::before,.cf-tag::after{content:'';flex:0 0 40px;height:1px;background:var(--g)}
+.cf-h2{font-family:var(--serif);font-size:clamp(52px,7vw,100px);font-weight:300;line-height:1;margin-bottom:24px}
+.cf-h2 em{font-style:italic;color:var(--gl);display:block}
+.cf-sub{font-size:15px;color:rgba(245,240,232,.5);max-width:480px;margin:0 auto 56px;line-height:1.8}
+.cf-acts{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+
+/* FOOTER */
+footer{position:relative;z-index:2;border-top:1px solid rgba(196,151,90,.1);padding:48px 72px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px}
+.fl{font-family:var(--serif);font-size:26px;font-weight:300;color:var(--g)}
+.fl em{font-style:italic;color:rgba(245,240,232,.6)}
+.flinks{display:flex;gap:32px;flex-wrap:wrap}
+.flinks a{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,240,232,.3);transition:color .25s}
+.flinks a:hover{color:var(--g)}
+.fsoc{display:flex;gap:12px}
+.fsa{width:38px;height:38px;border:1px solid rgba(196,151,90,.15);display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(245,240,232,.3);transition:all .3s}
+.fsa:hover{border-color:var(--g);color:var(--g)}
+.fcopy{width:100%;text-align:center;font-size:11px;color:rgba(245,240,232,.2);padding-top:24px;border-top:1px solid rgba(196,151,90,.06)}
+
+/* WA FLOAT */
+#waf{position:fixed;bottom:32px;right:32px;z-index:200;width:54px;height:54px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(37,211,102,.35);transition:transform .3s,box-shadow .3s;cursor:none}
+#waf:hover{transform:scale(1.1) translateY(-2px);box-shadow:0 16px 48px rgba(37,211,102,.45)}
+#waf svg{width:24px;fill:white}
+
+/* MODAL */
+#modal{position:fixed;inset:0;z-index:400;background:rgba(6,5,10,.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s;padding:24px}
+#modal.open{opacity:1;pointer-events:all}
+.mbox{background:var(--ink2);border:1px solid rgba(196,151,90,.2);max-width:640px;width:100%;padding:64px;position:relative;max-height:90svh;overflow-y:auto;transform:translateY(20px);transition:transform .35s cubic-bezier(.16,1,.3,1)}
+#modal.open .mbox{transform:translateY(0)}
+.mcl{position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(245,240,232,.4);font-size:22px;cursor:none;transition:color .25s}
+.mcl:hover{color:var(--paper)}
+.mtn{font-family:var(--serif);font-size:42px;font-weight:300;margin-bottom:6px;line-height:1}
+.mtm{font-size:11px;letter-spacing:.2em;color:var(--g);text-transform:uppercase;margin-bottom:20px}
+.mpr{font-family:var(--serif);font-size:52px;font-weight:300;color:var(--gl);margin:20px 0;line-height:1}
+.mpr small{font-size:13px;color:rgba(245,240,232,.35);letter-spacing:.1em;font-family:var(--sans)}
+.mde{font-size:14px;color:rgba(245,240,232,.55);line-height:1.85;margin-bottom:28px}
+.mfl{list-style:none;margin-bottom:32px;display:flex;flex-direction:column;gap:10px}
+.mfl li{font-size:13px;color:rgba(245,240,232,.7);padding-left:22px;position:relative}
+.mfl li::before{content:'–';position:absolute;left:0;color:var(--g)}
+.mac{display:flex;gap:16px;flex-wrap:wrap}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal-l{opacity:0;transform:translateX(-40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.reveal-l.in{opacity:1;transform:translateX(0)}
+.reveal-r{opacity:0;transform:translateX(40px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.reveal-r.in{opacity:1;transform:translateX(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+@keyframes upIn{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* RESPONSIVE */
+@media(max-width:1200px){
+  #nav,#nav.scrolled{padding:20px 40px}
+  .hero-c,.h-scroll{padding:0 40px}
+  .h-scroll{left:40px}
+  #phi{padding:100px 40px;gap:60px}
+  .tgrid,.th{padding-left:40px;padding-right:40px}
+  #exp,#b2b{padding:100px 40px;gap:60px}
+  .rh,.rscroll{padding-left:40px;padding-right:40px}
+  #why,#faq,#contact,#booking,#ctaf{padding:100px 40px}
+}
+@media(max-width:900px){
+  .nav-c,.nav-btn{display:none}
+  .ham{display:flex}
+  #nav,#nav.scrolled{padding:18px 24px}
+  .hero-c{padding:0 24px}
+  .h-scroll{left:24px;display:none}
+  .h-h1{font-size:clamp(52px,12vw,80px)}
+  #phi{grid-template-columns:1fr;padding:80px 24px;gap:40px}
+  .phi-n{font-size:100px}
+  .tgrid{grid-template-columns:1fr 1fr;grid-auto-rows:200px;padding:0 24px}
+  .tc:nth-child(1){grid-column:span 2;grid-row:span 1}
+  .tc:nth-child(2){grid-column:span 2;grid-row:span 1}
+  .tc:nth-child(3){grid-column:span 1}
+  .tc:nth-child(4){grid-column:span 1}
+  .tc:nth-child(5){grid-column:span 1}
+  .tc:nth-child(6){grid-column:span 1}
+  .th{padding:0 24px 48px;flex-direction:column;align-items:flex-start}
+  #exp{grid-template-columns:1fr;padding:80px 24px}
+  .exp-acc-img,.exp-frame{display:none}
+  #why{grid-template-columns:1fr;padding:80px 24px}
+  #b2b{grid-template-columns:1fr;padding:80px 24px}
+  .biw img{aspect-ratio:1.3}
+  .bib{left:0;bottom:-20px}
+  #faq,#contact,#booking,#ctaf{padding:80px 24px}
+  #contact{grid-template-columns:1fr}
+  .bform{padding:30px 20px}
+  .fgrid{grid-template-columns:1fr}
+  .mbox{padding:40px 24px}
+  .rh{padding:0 24px 48px;flex-direction:column;align-items:flex-start}
+  .rscroll{padding:0 24px 20px}
+  footer{padding:32px 24px;flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<canvas id="particles"></canvas>
+
+<!-- MOBILE MENU -->
+<div id="mmenu">
+  <button id="mcl">✕</button>
+  <a href="#tours" onclick="closeMob()">I Tour</a>
+  <a href="#exp" onclick="closeMob()">L'Esperienza</a>
+  <a href="#b2b" onclick="closeMob()">B2B</a>
+  <a href="#reviews" onclick="closeMob()">Recensioni</a>
+  <a href="#booking" onclick="closeMob()" style="color:var(--g)">Prenota</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo"><em>Aura</em> Rome Tours</a>
+  <nav class="nav-c">
+    <a href="#tours">I Tour</a>
+    <a href="#exp">L'Esperienza</a>
+    <a href="#b2b">B2B</a>
+    <a href="#reviews">Recensioni</a>
+    <a href="#contact">Contatti</a>
+  </nav>
+  <a href="#booking" class="nav-btn"><span>Prenota Ora</span></a>
+  <div class="ham" onclick="openMob()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-img">
+    <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=1920&q=85&fit=crop" alt="Roma">
+  </div>
+  <div class="hero-orb"></div>
+  <!-- Skyline SVG overlay -->
+  <div class="hero-skyline">
+    <svg viewBox="0 0 1440 180" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,160 L60,160 L60,140 L70,135 L80,140 L80,120 L88,110 L96,120 L96,140 L110,140 L110,160
+        L180,160 L180,145 L195,140 L200,130 L208,120 L215,130 L220,140 L235,145 L235,160
+        L300,160 L300,145 L312,138 L320,128 L325,115 L330,128 L338,138 L350,145 L350,160
+        L420,160 L420,148 L432,142 L440,132 L445,118 L448,100 L451,118 L456,132 L464,142 L476,148 L476,160
+        L540,160 L540,148 L550,142 L558,132 L563,122 L568,132 L576,142 L586,148 L586,160
+        L650,160 L650,145 L660,138 L668,128 L674,115 L680,128 L688,138 L698,145 L698,160
+        L760,160 L760,148 L772,140 L780,128 L784,112 L787,95 L790,112 L794,128 L802,140 L814,148 L814,160
+        L880,160 L880,148 L890,142 L898,132 L903,122 L908,132 L916,142 L924,148 L924,160
+        L990,160 L990,148 L1000,140 L1008,128 L1013,115 L1018,128 L1026,140 L1036,148 L1036,160
+        L1100,160 L1100,145 L1112,138 L1120,125 L1124,108 L1127,90 L1130,108 L1134,125 L1142,138 L1154,145 L1154,160
+        L1220,160 L1220,148 L1230,142 L1238,132 L1242,122 L1246,132 L1254,142 L1262,148 L1262,160
+        L1320,160 L1320,148 L1330,142 L1338,132 L1342,120 L1346,132 L1354,142 L1362,148 L1362,160
+        L1440,160 L1440,180 L0,180 Z"
+        fill="var(--ink)" opacity=".85"/>
+    </svg>
+  </div>
+
+  <div class="hero-c">
+    <div class="h-ey">Tour Privati · Golf Cart · Roma</div>
+    <h1 class="h-h1">
+      Scopri Roma<br>
+      <em>come non l'hai</em><br>
+      mai vista
+    </h1>
+    <p class="h-sub">Tour privati esclusivi a bordo dei nostri golf cart Alba. Niente folla, nessun gruppo — solo tu, Roma, e un romano che la conosce come le sue tasche.</p>
+    <div class="h-btns">
+      <a href="#tours" class="btn-g"><span>Esplora i Tour</span></a>
+      <a href="#booking" class="btn-w">Prenota Ora</a>
+    </div>
+  </div>
+  <div class="h-scroll"><span>Scopri</span><div class="sbar"></div></div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" style="position:relative;z-index:2">
+  <div class="ticker-t">
+    <span>Tour Privati</span><span class="dot">✦</span><span>Golf Cart Alba</span><span class="dot">✦</span>
+    <span>Roma Esclusiva</span><span class="dot">✦</span><span>Nessuna Folla</span><span class="dot">✦</span>
+    <span>Guide Appassionate</span><span class="dot">✦</span><span>Eco-Friendly</span><span class="dot">✦</span>
+    <span>100% Privato</span><span class="dot">✦</span><span>Personalizzato</span><span class="dot">✦</span>
+    <span>Tour Privati</span><span class="dot">✦</span><span>Golf Cart Alba</span><span class="dot">✦</span>
+    <span>Roma Esclusiva</span><span class="dot">✦</span><span>Nessuna Folla</span><span class="dot">✦</span>
+    <span>Guide Appassionate</span><span class="dot">✦</span><span>Eco-Friendly</span><span class="dot">✦</span>
+    <span>100% Privato</span><span class="dot">✦</span><span>Personalizzato</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- PHILOSOPHY -->
+<section id="phi">
+  <div class="reveal-l"><div class="phi-n">01</div></div>
+  <div class="reveal-r">
+    <div class="ltag">La nostra essenza</div>
+    <h2 class="sh2">Roma non si visita —<br>si <em>vive</em></h2>
+    <p class="phi-txt">Siamo nati dall'incontro tra un imprenditore romano con trent'anni nel settore del lusso e la voglia irrefrenabile di condividere la bellezza di questa città. Non offriamo un tour. Offriamo un ricordo per tutta la vita.</p>
+    <p class="phi-txt">Con i nostri golf cart Alba, silenziosi ed ecologici, raggiungiamo angoli che i bus turistici non vedranno mai. Ogni percorso è privato, ogni sosta è la tua.</p>
+    <div class="phi-stats">
+      <div class="pstat reveal d1"><div class="n">100%</div><div class="l">Tour Privati</div></div>
+      <div class="pstat reveal d2"><div class="n">★ 5.0</div><div class="l">Rating Ospiti</div></div>
+      <div class="pstat reveal d3"><div class="n">ECO</div><div class="l">Golf Cart Alba</div></div>
+      <div class="pstat reveal d4"><div class="n">0</div><div class="l">Turisti in Fila</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TOURS -->
+<section id="tours">
+  <div class="th reveal">
+    <div>
+      <div class="tk">Le nostre esperienze</div>
+      <h2 class="thh">Tour su misura<br>per ogni <em>desiderio</em></h2>
+    </div>
+    <a href="#booking" class="btn-w">Prenota</a>
+  </div>
+  <div class="tgrid">
+    <div class="tc" onclick="openM('classico')">
+      <img class="tc-img" src="https://images.unsplash.com/photo-1591289009723-aef0a1a8a211?w=900&q=80" alt="Tour Classico">
+      <div class="tc-ov"></div>
+      <div class="tc-price">da €250<br><small style="font-size:10px;opacity:.5">p.p.</small></div>
+      <div class="tc-body"><span class="tc-badge">● Disponibile ora</span><div class="tc-name">La Grande Bellezza</div><div class="tc-meta">3 ore · Tour Classico</div></div>
+      <div class="tc-arrow">→</div>
+    </div>
+    <div class="tc" onclick="openM('notte')">
+      <img class="tc-img" src="https://images.unsplash.com/photo-1529260830199-42c24126f198?w=700&q=80" alt="Roma by Night">
+      <div class="tc-ov"></div>
+      <div class="tc-price">da €310</div>
+      <div class="tc-body"><span class="tc-badge">● Tramonto & Notte</span><div class="tc-name">Roma by Night</div><div class="tc-meta">2.5 ore · da €310 p.p.</div></div>
+      <div class="tc-arrow">→</div>
+    </div>
+    <div class="tc" onclick="openM('extended')">
+      <img class="tc-img" src="https://images.unsplash.com/photo-1555992828-ca4dbe41d294?w=600&q=80" alt="Full Roma">
+      <div class="tc-ov"></div>
+      <div class="tc-price">da €400</div>
+      <div class="tc-body"><span class="tc-badge">● La più richiesta</span><div class="tc-name">Full Roma</div><div class="tc-meta">3+ ore · da €400 p.p.</div></div>
+      <div class="tc-arrow">→</div>
+    </div>
+    <div class="tc" onclick="openM('shooting')">
+      <img class="tc-img" src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80" alt="Shooting Tour">
+      <div class="tc-ov"></div>
+      <div class="tc-body"><span class="tc-badge">● Premium</span><div class="tc-name">Shooting Tour</div><div class="tc-meta">Tour + Fotografo</div></div>
+      <div class="tc-arrow">→</div>
+    </div>
+    <div class="tc" onclick="openM('fiat')">
+      <img class="tc-img" src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=600&q=80" alt="Fiat 500">
+      <div class="tc-ov"></div>
+      <div class="tc-body"><span class="tc-badge">● In arrivo</span><div class="tc-name">Fiat 500</div><div class="tc-meta">L'esperienza vintage</div></div>
+      <div class="tc-arrow">→</div>
+    </div>
+    <div class="tc" onclick="document.getElementById('b2b').scrollIntoView({behavior:'smooth'})">
+      <img class="tc-img" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80" alt="B2B">
+      <div class="tc-ov"></div>
+      <div class="tc-body"><span class="tc-badge">● Hotel & Agenzie</span><div class="tc-name">Partnership B2B</div><div class="tc-meta">Soluzioni dedicate</div></div>
+      <div class="tc-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="exp">
+  <div class="exp-vis reveal-l">
+    <img class="exp-main-img" src="https://images.unsplash.com/photo-1531572753322-ad063cecc140?w=700&q=80" alt="Esperienza Roma">
+    <img class="exp-acc-img" src="https://images.unsplash.com/photo-1491555103944-7c647fd857e6?w=400&q=80" alt="Golf Cart">
+    <div class="exp-frame"></div>
+    <div class="exp-tag">Nati nel 2025</div>
+  </div>
+  <div class="reveal-r">
+    <div class="ltag">Perché sceglierci</div>
+    <h2 class="sh2">Non sei un numero.<br>Sei il nostro <em>ospite</em></h2>
+    <p style="font-size:15px;color:rgba(245,240,232,.55);line-height:1.9;margin-top:8px">Ogni tour è progettato intorno a te — i tuoi ritmi, i tuoi desideri, le tue storie da portare a casa. I nostri driver non sono autisti, sono narratori romani innamorati della loro città.</p>
+    <div class="expf">
+      <div class="ef reveal d1"><div class="ef-ico">✦</div><div><div class="ef-t">Esperienza 100% Privata</div><div class="ef-s">Solo il tuo gruppo, nessun estraneo</div></div></div>
+      <div class="ef reveal d2"><div class="ef-ico">◎</div><div><div class="ef-t">Guide Storyteller</div><div class="ef-s">Ogni angolo ha una storia da raccontare</div></div></div>
+      <div class="ef reveal d3"><div class="ef-ico">◇</div><div><div class="ef-t">Golf Cart Alba Ecologici</div><div class="ef-s">Silenziosi, agili, dove i bus non arrivano</div></div></div>
+      <div class="ef reveal d4"><div class="ef-ico">◈</div><div><div class="ef-t">Partenza dal Tuo Hotel</div><div class="ef-s">Comodità totale, nessuna logistica</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="bwrap">
+    <div class="btop reveal">
+      <div class="ltag" style="justify-content:center">Inizia l'avventura</div>
+      <h2 class="sh2" style="font-size:clamp(44px,5vw,72px)">Prenota il tuo<br>tour <em>privato</em></h2>
+    </div>
+    <div class="btabs reveal">
+      <button class="tab active" onclick="switchT('form',this)">Richiesta Diretta</button>
+      <button class="tab" onclick="switchT('cal',this)">Calendly</button>
+      <button class="tab" onclick="switchT('wa',this)">WhatsApp</button>
+    </div>
+    <!-- FORM -->
+    <div id="p-form" class="bpanel active">
+      <div class="bform">
+        <div id="ffields">
+          <div class="fgrid">
+            <div class="fg"><label>Nome e Cognome</label><input type="text" id="fn" placeholder="Mario Rossi"></div>
+            <div class="fg"><label>Email</label><input type="email" id="fe" placeholder="mario@email.com"></div>
+            <div class="fg"><label>Telefono / WhatsApp</label><input type="tel" id="fp" placeholder="+39 000 000 0000"></div>
+            <div class="fg"><label>Numero di Persone</label><select id="fgs"><option value="">Seleziona...</option><option>1–2 persone</option><option>3–4 persone</option><option>5–6 persone</option><option>Gruppo (7+)</option></select></div>
+            <div class="fg full"><label>Tour Desiderato</label><select id="fts"><option value="">Seleziona un tour...</option><option>La Grande Bellezza (3h) — da €250 p.p.</option><option>Roma by Night (2.5h) — da €310 p.p.</option><option>Full Roma Experience (3h+) — da €400 p.p.</option><option>Shooting Tour — su richiesta</option><option>Aiutatemi a scegliere</option></select></div>
+            <div class="fg"><label>Data Preferita</label><input type="date" id="fd"></div>
+            <div class="fg"><label>Orario Preferito</label><select id="fhs"><option value="">Seleziona...</option><option>Mattina (9:00–12:00)</option><option>Pomeriggio (14:00–17:00)</option><option>Tramonto (17:00–20:00)</option><option>Sera (20:00+)</option></select></div>
+            <div class="fg full"><label>Note o richieste speciali</label><textarea id="fno" placeholder="Es. anniversario, bambini piccoli, partenza dall'hotel X..."></textarea></div>
+          </div>
+        </div>
+        <div class="sstate" id="sst"><div class="sc">✓</div><h3>Richiesta Inviata!</h3><p>Ti risponderemo entro 2 ore. Riceverai anche un messaggio WhatsApp di conferma.</p></div>
+        <div class="ffoot" id="ffoot">
+          <div>
+            <div class="fnote">Pagamento sicuro · Cancellazione gratuita 24h prima · Risposta in 2h</div>
+            <div class="pbadges"><span class="pb s">Stripe</span><span class="pb p">PayPal</span><span class="pb">Bonifico</span></div>
+          </div>
+          <button class="btn-g" onclick="doSubmit()"><span>Invia Richiesta →</span></button>
+        </div>
+      </div>
+    </div>
+    <!-- CALENDLY -->
+    <div id="p-cal" class="bpanel">
+      <div class="cal-box"><div class="ico">📅</div><h3>Scegli data e ora</h3><p>Prenota direttamente nel nostro calendario. Vedi le disponibilità in tempo reale.</p><a href="https://calendly.com/aura-intravel/aura-private-tour" target="_blank" class="btn-g"><span>Apri Calendly →</span></a></div>
+    </div>
+    <!-- WHATSAPP -->
+    <div id="p-wa" class="bpanel">
+      <div class="wa-box"><div class="ico">💬</div><h3>Scrivici su WhatsApp</h3><p>Rispondiamo in pochi minuti. La via più rapida per prenotare o avere informazioni.</p><a href="https://wa.me/393206891014?text=Ciao%20Aura%20Tours%2C%20vorrei%20prenotare%20un%20tour!" target="_blank" class="btn-g" style="display:inline-flex"><span>Apri WhatsApp →</span></a><p style="margin-top:16px;font-size:11px;color:rgba(245,240,232,.3)">+39 320 689 1014</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="rh reveal">
+    <div><div class="ltag">I nostri ospiti</div><h2 class="sh2">Esperienze<br><em>indimenticabili</em></h2></div>
+    <div style="font-size:12px;color:rgba(245,240,232,.35)">← Scorri →</div>
+  </div>
+  <div class="rscroll">
+    <div class="rv"><div class="rv-q">"</div><div class="rv-stars">★★★★★</div><p class="rv-txt">"La migliore esperienza di Roma. La nostra guida ci ha portato in posti che non avremmo mai trovato da soli. Un sogno."</p><div class="rv-n">Sarah M.</div><div class="rv-f">New York, USA</div></div>
+    <div class="rv"><div class="rv-q">"</div><div class="rv-stars">★★★★★</div><p class="rv-txt">"Tour di nozze indimenticabile. Roma di notte dal golf cart è un'altra dimensione. Romantico oltre ogni aspettativa."</p><div class="rv-n">Marco & Giulia</div><div class="rv-f">Milano, Italia</div></div>
+    <div class="rv"><div class="rv-q">"</div><div class="rv-stars">★★★★★</div><p class="rv-txt">"Mia madre di 80 anni ha potuto vedere tutto senza stancarsi. Il golf cart è perfetto. La guida era straordinaria."</p><div class="rv-n">Thomas B.</div><div class="rv-f">Londra, UK</div></div>
+    <div class="rv"><div class="rv-q">"</div><div class="rv-stars">★★★★★</div><p class="rv-txt">"Ho visitato Roma decine di volte. Questo tour mi ha mostrato una città che non conoscevo. Assolutamente da ripetere."</p><div class="rv-n">Isabelle C.</div><div class="rv-f">Parigi, Francia</div></div>
+    <div class="rv"><div class="rv-q">"</div><div class="rv-stars">★★★★★</div><p class="rv-txt">"Il nostro driver era una vera enciclopedia vivente di Roma. Divertente, appassionato, disponibile. Perfetto in tutto."</p><div class="rv-n">James R.</div><div class="rv-f">Sydney, Australia</div></div>
+    <div class="rv"><div class="rv-q">"</div><div class="rv-stars">★★★★★</div><p class="rv-txt">"Esperienza di lusso puro. Il golf cart Alba è bellissimo e silenzioso. La guida conosceva ogni storia e segreto della città."</p><div class="rv-n">Hana K.</div><div class="rv-f">Tokyo, Giappone</div></div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="wc reveal d1"><div class="wn">01</div><h3 class="wt">Esperienza<br>Privata & <em>Flessibile</em></h3><p class="wb">Il tour è solo tuo. Decidi cosa vedere, quanto fermarti, dove prendere un gelato. Nessun gruppo, nessun compromesso.</p></div>
+  <div class="wc reveal d2"><div class="wn">02</div><h3 class="wt">Guide<br><em>Storyteller</em> Romane</h3><p class="wb">I nostri driver non sono autisti, sono narratori innamorati di Roma. Ogni angolo diventa una storia, ogni palazzo un capitolo.</p></div>
+  <div class="wc reveal d3"><div class="wn">03</div><h3 class="wt">Comfort<br>& <em>Stile</em> Esclusivo</h3><p class="wb">Golf cart Alba silenziosi ed ecologici. Raggiungono dove i bus non arrivano. Ideali per famiglie, coppie e chi vuole Roma senza fatica.</p></div>
+</section>
+
+<!-- B2B -->
+<section id="b2b">
+  <div class="biw reveal-l">
+    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=700&q=80" alt="Hotel Partnership">
+    <div class="bib"><div class="big">B2B</div><div class="sm">Partnership</div></div>
+  </div>
+  <div class="reveal-r">
+    <div class="ltag">Per strutture ricettive</div>
+    <h2 class="sh2">Partnership<br><em>esclusiva</em><br>per hotel</h2>
+    <p style="font-size:15px;color:rgba(245,240,232,.55);line-height:1.9;margin-top:16px">Differenzia la tua struttura con esperienze che i tuoi ospiti ricorderanno per sempre. Collaboriamo con hotel boutique, ville di lusso e agenzie di viaggio.</p>
+    <div class="blist">
+      <div class="bi reveal d1">Tour privati brandizzati per i tuoi ospiti</div>
+      <div class="bi reveal d2">Servizio navetta personalizzato (Villa Agrippina e altri)</div>
+      <div class="bi reveal d3">Commissioni competitive e reportistica mensile</div>
+      <div class="bi reveal d4">Disponibilità prioritaria e gestione dedicata</div>
+      <div class="bi reveal">Materiali promozionali co-brandizzati</div>
+    </div>
+    <a href="mailto:info@aurarometours.com?subject=Partnership%20B2B%20Aura" class="btn-g" style="margin-top:40px;display:inline-flex"><span>Parliamo di Partnership</span></a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="finner">
+    <div class="fhd reveal"><div class="ltag" style="justify-content:center">Domande frequenti</div><h2 class="sh2" style="font-size:clamp(44px,5vw,72px)">Tutto quello<br>che vuoi <em>sapere</em></h2></div>
+    <div class="fitem reveal"><div class="fq" onclick="tFaq(this)"><span class="fqt">Cosa succede se piove?</span><div class="fico">+</div></div><div class="fa">I nostri golf cart sono dotati di protezioni antipioggia. In caso di maltempo estremo, offriamo spostamento gratuito del tour o rimborso completo entro 24h.</div></div>
+    <div class="fitem reveal"><div class="fq" onclick="tFaq(this)"><span class="fqt">Dove ci incontriamo?</span><div class="fico">+</div></div><div class="fa">Veniamo a prenderti direttamente al tuo hotel o Airbnb. Nessuna metro, nessuna complicazione — arriviamo da te e ripartiamo quando sei pronto.</div></div>
+    <div class="fitem reveal"><div class="fq" onclick="tFaq(this)"><span class="fqt">Quante persone possono salire?</span><div class="fico">+</div></div><div class="fa">I golf cart Alba ospitano fino a 6 persone. Per gruppi più numerosi usiamo più cart in contemporanea, mantenendo l'esperienza privata e coordinata.</div></div>
+    <div class="fitem reveal"><div class="fq" onclick="tFaq(this)"><span class="fqt">Come funziona il pagamento?</span><div class="fico">+</div></div><div class="fa">Accettiamo Stripe (carta di credito/debito), PayPal e bonifico bancario. Acconto per confermare, saldo il giorno del tour. Cancellazione gratuita fino a 24h prima.</div></div>
+    <div class="fitem reveal"><div class="fq" onclick="tFaq(this)"><span class="fqt">Il tour è adatto a bambini e persone con difficoltà motorie?</span><div class="fico">+</div></div><div class="fa">Assolutamente sì — è uno dei nostri punti di forza. Il golf cart elimina ogni fatica. Nessuna salita a piedi, nessuna fila. Molte famiglie e persone anziane scelgono Aura proprio per questo motivo.</div></div>
+    <div class="fitem reveal"><div class="fq" onclick="tFaq(this)"><span class="fqt">Posso personalizzare il percorso?</span><div class="fico">+</div></div><div class="fa">È il nostro punto di forza. Il tour è 100% tuo: decidi cosa vedere, quanto fermarti, dove fare pause. Dimmi i tuoi desideri e costruiamo il percorso perfetto insieme prima del tour.</div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal-l">
+    <div class="ltag">Dove siamo</div>
+    <h2 class="sh2">Roma è<br>la nostra <em>città</em></h2>
+    <p style="font-size:15px;color:rgba(245,240,232,.5);margin-top:16px;line-height:1.85">Partiamo dal tuo hotel o da qualsiasi punto centrale di Roma. Operativi nel centro storico ogni giorno.</p>
+    <div class="cms">
+      <a class="cm" href="https://wa.me/393206891014" target="_blank"><div class="cmi">💬</div><div><div class="cml">WhatsApp</div><div class="cmv">+39 320 689 1014</div></div></a>
+      <a class="cm" href="mailto:info@aurarometours.com"><div class="cmi">✉</div><div><div class="cml">Email</div><div class="cmv">info@aurarometours.com</div></div></a>
+      <a class="cm" href="https://www.instagram.com/aura.intravel" target="_blank"><div class="cmi">◎</div><div><div class="cml">Instagram</div><div class="cmv">@aura.intravel</div></div></a>
+      <a class="cm" href="https://calendly.com/aura-intravel/aura-private-tour" target="_blank"><div class="cmi">◈</div><div><div class="cml">Calendly</div><div class="cmv">Prenota online — scegli data e ora</div></div></a>
+    </div>
+  </div>
+  <div class="reveal-r">
+    <div class="mframe">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24346.12!2d12.4922309!3d41.9027835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x132f61b6532013ad%3A0x28f1c82e908503c4!2sRoma%2C%20RM!5e0!3m2!1sit!2sit" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="ctaf">
+  <div class="cf-tag">Pronto a partire?</div>
+  <h2 class="cf-h2 reveal">Vivi Roma<br><em>come non hai mai fatto</em></h2>
+  <p class="cf-sub reveal">Un tour privato, su misura, a bordo di un golf cart silenzioso. Roma ti aspetta.</p>
+  <div class="cf-acts reveal">
+    <a href="#booking" class="btn-g"><span>Prenota il Tuo Tour</span></a>
+    <a href="https://wa.me/393206891014" target="_blank" class="btn-w">Scrivici su WhatsApp</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fl">Aura <em>Rome Tours</em></div>
+  <ul class="flinks">
+    <li><a href="#tours">I Tour</a></li>
+    <li><a href="#exp">Chi Siamo</a></li>
+    <li><a href="#b2b">B2B</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#booking">Prenota</a></li>
+  </ul>
+  <div class="fsoc">
+    <a class="fsa" href="https://www.instagram.com/aura.intravel" target="_blank">IG</a>
+    <a class="fsa" href="https://wa.me/393206891014" target="_blank">WA</a>
+  </div>
+  <div class="fcopy">© 2025 Aura Rome Tours · www.aurarometours.com · info@aurarometours.com · +39 320 689 1014</div>
+</footer>
+
+<!-- FLOATING WA -->
+<a id="waf" href="https://wa.me/393206891014?text=Ciao%20Aura%20Tours%2C%20vorrei%20prenotare!" target="_blank">
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- MODAL -->
+<div id="modal" onclick="cMO(event)">
+  <div class="mbox">
+    <button class="mcl" onclick="cM()">✕</button>
+    <div id="mbody"></div>
+  </div>
+</div>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur'),cr=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function animR(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(animR)})();
+
+/* PARTICLES */
+(()=>{
+  const c=document.getElementById('particles'),ctx=c.getContext('2d');
+  let W,H,P=[];
+  const resize=()=>{W=c.width=innerWidth;H=c.height=innerHeight};
+  resize();addEventListener('resize',resize);
+  for(let i=0;i<60;i++)P.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,r:Math.random()*1.4+.3,o:Math.random()*.35+.08});
+  (function draw(){
+    ctx.clearRect(0,0,W,H);
+    P.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(196,151,90,${p.o})`;ctx.fill();
+    });
+    for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){
+      const dx=P[i].x-P[j].x,dy=P[i].y-P[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120){ctx.beginPath();ctx.strokeStyle=`rgba(196,151,90,${.07*(1-d/120)})`;ctx.lineWidth=.5;ctx.moveTo(P[i].x,P[i].y);ctx.lineTo(P[j].x,P[j].y);ctx.stroke()}
+    }
+    requestAnimationFrame(draw);
+  })();
+})();
+
+/* NAV */
+addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>80));
+
+/* MOBILE MENU */
+function openMob(){document.getElementById('mmenu').classList.add('open');document.body.style.overflow='hidden'}
+function closeMob(){document.getElementById('mmenu').classList.remove('open');document.body.style.overflow=''}
+document.getElementById('mcl').onclick=closeMob;
+
+/* REVEAL */
+const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.1,rootMargin:'0px 0px -60px 0px'});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>ro.observe(el));
+
+/* TABS */
+function switchT(id,btn){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.querySelectorAll('.bpanel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+}
+
+/* FAQ */
+function tFaq(el){const it=el.parentElement;document.querySelectorAll('.fitem').forEach(i=>{if(i!==it)i.classList.remove('open')});it.classList.toggle('open')}
+
+/* TOURS */
+const T={
+  classico:{name:'La Grande Bellezza',meta:'Tour Classico · 3 ore · Partenza dal tuo hotel',price:'da €250',pn:'a persona · min. 2',desc:'Un viaggio attraverso 3000 anni di storia in poche ore. Piazza del Popolo, il Pincio, Fontana di Trevi, Pantheon, Circo Massimo, Colosseo. Il golf cart ti porta dove gli altri non arrivano, con soste illimitate per foto e pause.',feats:['Colosseo e Circo Massimo','Pantheon e Fontana di Trevi','Piazza Navona e vicoli nascosti','Partenza dal tuo hotel','Guida bilingue inclusa','Soste fotografiche illimitate','Personalizzabile al 100%']},
+  notte:{name:'Roma by Night',meta:'Tour Notturno · 2.5 ore · Tramonto e oltre',price:'da €310',pn:'a persona · min. 2',desc:'Roma illuminata di notte è un\'altra città. I monumenti dorati, le piazze svuotate dalla folla, la magia che solo i romani conoscono. Un\'esperienza romantica e irripetibile.',feats:['Fontana di Trevi senza folla','Colosseo e Fori illuminati','Piazza Navona di notte','Atmosfera romantica garantita','Ideale per coppie e anniversari','Partenza al tramonto','Durata estendibile']},
+  extended:{name:'Full Roma Experience',meta:'Tour Completo · 3+ ore · La più richiesta',price:'da €400',pn:'a persona · min. 2',desc:'Per chi non vuole accontentarsi. Quartieri nascosti, soste panoramiche esclusive, libertà totale. Questo è il nostro tour di punta — il più venduto, il più amato.',feats:['Percorso 100% personalizzabile','Quartieri nascosti di Roma','Soste panoramiche esclusive','Caffè o gelato incluso','Consigli ristoranti e segreti locali','Fotografo su richiesta','Durata flessibile']},
+  shooting:{name:'Shooting Tour',meta:'Tour + Fotografia Professionale',price:'Su Richiesta',pn:'pacchetto personalizzato',desc:'Tour privato con fotografo professionista incluso. Torna a casa con scatti da sogno nei luoghi più iconici e nascosti di Roma. Il regalo perfetto per matrimoni, anniversari, momenti speciali.',feats:['Fotografo professionista incluso','Editing e ritocco professionale','Galleria privata online','Percorso fotograficamente ottimale','Ideale per matrimoni e anniversari','Consegna foto entro 48h']},
+  fiat:{name:'Tour in Fiat 500',meta:'Esperienza Vintage · In Arrivo',price:'Prossimamente',pn:'lista d\'attesa aperta',desc:'Un viaggio nella dolce vita a bordo di una Fiat 500 d\'epoca. Roma come la vedevano Fellini e Audrey Hepburn. Puramente, irresistibilmente romano. Iscriviti alla lista d\'attesa.',feats:['Fiat 500 originale d\'epoca','Esperienza vintage autentica','Percorso cinematografico','In arrivo — lista attesa aperta','Contattaci per info e priorità']}
+};
+function openM(id){
+  const d=T[id];if(!d)return;
+  document.getElementById('mbody').innerHTML=`<div class="mtn">${d.name}</div><div class="mtm">${d.meta}</div><div class="mpr">${d.price} <small>${d.pn}</small></div><p class="mde">${d.desc}</p><ul class="mfl">${d.feats.map(f=>`<li>${f}</li>`).join('')}</ul><div class="mac"><a href="#booking" class="btn-g" onclick="cM();setTimeout(()=>document.getElementById('booking').scrollIntoView({behavior:'smooth'}),200)"><span>Prenota Questo Tour</span></a><a href="https://wa.me/393206891014?text=Sono%20interessato%20al%20tour%20${encodeURIComponent(d.name)}" target="_blank" class="btn-w">WhatsApp</a></div>`;
+  document.getElementById('modal').classList.add('open');document.body.style.overflow='hidden';
+}
+function cM(){document.getElementById('modal').classList.remove('open');document.body.style.overflow=''}
+function cMO(e){if(e.target===document.getElementById('modal'))cM()}
+
+/* FORM */
+function doSubmit(){
+  const n=document.getElementById('fn').value,e=document.getElementById('fe').value,t=document.getElementById('fts').value;
+  if(!n||!e||!t){alert('Compila almeno nome, email e tour desiderato.');return}
+  const msg=encodeURIComponent(`Ciao Aura Tours! Sono ${n} (${e}). Tour: ${t}. Data: ${document.getElementById('fd').value||'da definire'}. Persone: ${document.getElementById('fgs').value||'da definire'}. Orario: ${document.getElementById('fhs').value||'da definire'}. Note: ${document.getElementById('fno').value||'nessuna'}`);
+  document.getElementById('ffields').style.display='none';document.getElementById('ffoot').style.display='none';document.getElementById('sst').style.display='block';
+  setTimeout(()=>window.open(`https://wa.me/393206891014?text=${msg}`,'_blank'),800);
+}
+</script>
+</body>
+</html>
